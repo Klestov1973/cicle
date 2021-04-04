@@ -9,7 +9,7 @@
 #include <iostream>
 #include <memory>
 #include <cmath>
-#include <algorithm>
+
 
 #include <SDL2/SDL.h>
 
@@ -27,7 +27,7 @@ int main(int, char**)
 
 	auto win = std::shared_ptr<SDL_Window>(
 			SDL_CreateWindow(
-						"House",
+						"Cicle",
 						SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 						WIDTH, HEIGHT,
 						SDL_WINDOW_SHOWN),
@@ -61,27 +61,38 @@ int main(int, char**)
 
 
 		SDL_SetRenderDrawColor(ren.get(), 255, 255, 255, 255);
-		SDL_RenderDrawLine(ren.get(), 200, 570, 600, 570);
-		SDL_RenderDrawLine(ren.get(), 200, 570, 200, 270);
-		SDL_RenderDrawLine(ren.get(), 600, 570, 600, 270);
-		SDL_RenderDrawLine(ren.get(), 200, 270, 600, 270);
-		SDL_RenderDrawLine(ren.get(), 500, 570, 500, 420);
-		SDL_RenderDrawLine(ren.get(), 400, 420, 500, 420);
-		SDL_RenderDrawLine(ren.get(), 400, 420, 400, 570);
-		SDL_RenderDrawLine(ren.get(), 200, 270, 400, 100);
-		SDL_RenderDrawLine(ren.get(), 600, 270, 400, 100);
-		SDL_RenderDrawLine(ren.get(), 250, 500, 250, 370);
-		SDL_RenderDrawLine(ren.get(), 350, 370, 250, 370);
-		SDL_RenderDrawLine(ren.get(), 350, 500, 350, 370);
-		SDL_RenderDrawLine(ren.get(), 350, 500, 250, 500);
-		SDL_RenderDrawLine(ren.get(), 250, 100, 300, 100);
-		SDL_RenderDrawLine(ren.get(), 300, 182, 300, 100);
-		SDL_RenderDrawLine(ren.get(), 250, 100, 250, 224);
+		int radius = 150;
+		int x0=400;
+		int y0=300;
+		int x=0;
+		int y=radius;
+		int delta = 1-2*radius;
+		int error = 0;
+
+		while (y >= 0)
+		{
+		SDL_RenderDrawPoint(ren.get(), x0 + x, y0 + y);
+		SDL_RenderDrawPoint(ren.get(), x0 + x, y0 - y);
+		SDL_RenderDrawPoint(ren.get(), x0 - x, y0 + y);
+		SDL_RenderDrawPoint(ren.get(), x0 - x, y0 - y);
+
+		error = 2*(delta - x)-1;
+		if ((delta < 0) && (error <= 0))
+		{
+
+			delta += 2 * ++x + 1;
+			           continue;
+		}
+
+		if ((delta > 0) && (error > 0))
+		{	delta -= 2 * --y + 1;
+			           continue;}
+			       delta += 2 * (++x - --y);}
 
 		SDL_RenderPresent(ren.get());
+
 	}
 
-
 	return 0;
-}
 
+}
